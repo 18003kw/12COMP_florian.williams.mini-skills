@@ -1,22 +1,61 @@
 /*
-A program that adds arrays to the process of making a bouncing ball.
+A program that adds arrays to making a bouncing ball.
 */
 
-// CONSTANTS
-// Canvas Width
-const canvasWidthMax = 400;
-const canvasWidthMin = 0;
+// How do make it not go off edge when speed up framerate down?
 
-// Canvas Height
-const canvasHeightMax = 400;
-const canvasHeightMin = 0;
+// ballOne defined
+var ballOne = {
+  x : 0,
+  y : 0,
+  diameter : 100,
+  speedX : 3,
+  speedY : 3,
+};
+
+// ballTwo object defined
+var ballTwo = {
+  x : 0,
+  y : 0,
+  diameter : 50,
+  speedX : 5,
+  speedY : 5,
+
+  drawBall : function() {
+    ellipse(this.x, this.y, this.diameter);
+  },
+
+  moving : function() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+  },
+
+  xBounce : function() {
+    if (this.x >= (width - (this.diameter / 2)) || this.x <= (this.diameter / 2)) {
+      this.speedX *= -1;
+    }
+  },
+
+  yBounce : function() {
+    if(this.y >= (height - (this.diameter / 2)) || this.y <= (this.diameter / 2)) {
+      this.speedY *= -1;
+    }
+  },
+};
 
 // SETUP
 function setup() {
 
-  createCanvas(canvasWidthMax, canvasHeightMax);
+  createCanvas(400, 400);
   frameRate(60);
   strokeWeight(0);
+
+  ballOne.x = random(50, 350);
+  ballOne.y = random(50, 350);
+
+  ballTwo.x = random(50, 350);
+  ballTwo.y = random(50, 350);
+
 
 }
 
@@ -26,48 +65,31 @@ function draw() {
   // Setting up the background
   background(100, 150, 190);
 
-  // Calling the drawBall function 1st time.
-  drawBall(random(0, 400), random(0, 400), random(1, 10), random(1, 10), 100);
+  // ballOne
+  ballOneMove();
 
-  // Calling the drawBall function 2nd time.
-  drawBall(random(0, 400), random(0, 400), random(1, 10), random(1, 10), 50);
+  ballOne.speedX = ballOneBounce(ballOne.x, (ballOne.diameter / 2), ballOne.speedX);
+  ballOne.speedY = ballOneBounce(ballOne.y, (ballOne.diameter / 2), ballOne.speedY);
 
-function drawBall(x, y, speedX, speedY, diameter) {
+  ellipse(ballOne.x, ballOne.y, ballOne.diameter);
 
-  // Ball movement
-  x = x + speedX;
-  y = y + speedY;
+  // ballTwo
+  ballTwo.moving();
 
-  // Moving the ball along the x axis.
-  if (x >= (canvasWidthMax - (diameter / 2))) {
-    
-    console.log("Off the screen +x");
-    speedX *= -1;
-    x = (canvasWidthMax - (diameter / 2));
-
-  } else if (x <= (canvasWidthMin + (diameter / 2))) {
-    
-    console.log("Off the screen -x");
-    speedX *= -1;
-    x = (canvasWidthMin + (diameter / 2));
-
-  }
-
-  // Moving the ball along the y axis.
-  if (y >= (canvasHeightMax - (diameter / 2))) {
-    
-    console.log("Off the screen +y");
-    speedY *= -1;
-    y = (canvasHeightMax - (diameter / 2));
+  ballTwo.xBounce();
+  ballTwo.yBounce();
   
-  } else if (y <= (canvasHeightMin + (diameter / 2))) {
-    
-    console.log("Off the screen -y");
-    speedY *= -1;
-    y = (canvasHeightMin + (diameter / 2));
-  
-  }
+  ballTwo.drawBall();
+}
 
-// Drawing the circle. It's at the end, because if it is accidentally initialised outside the cavas, it will still automatically return to the canvas.
-  ellipse(x, y, diameter, diameter);
+function ballOneMove() {
+  ballOne.x += ballOne.speedX;
+  ballOne.y += ballOne.speedY;
+}
+
+function ballOneBounce(position, radius, speed) {
+  if (position >= (width - radius) || position <= radius) {
+    speed *= -1;
+    }
+  return(speed);
 }

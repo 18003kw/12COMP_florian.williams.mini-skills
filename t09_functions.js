@@ -9,8 +9,8 @@ var ballOne = {
   x : 0,
   y : 0,
   diameter : 100,
-  speedX : random(-10, 10),
-  speedY : random(-10, 10),
+  speedX : 3,
+  speedY : 3,
 };
 
 // ballTwo object defined

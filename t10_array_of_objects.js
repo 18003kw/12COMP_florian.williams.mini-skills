@@ -1,95 +1,110 @@
 /*
 A program that adds arrays to making a bouncing ball.
 */
+// Constants
 
-// How do make it not go off edge when speed up framerate down?
-
-// ballOne defined
-var ballOne = {
-  x : 0,
-  y : 0,
-  diameter : 100,
-  speedX : 3,
-  speedY : 3,
-};
-
-// ballTwo object defined
-var ballTwo = {
-  x : 0,
-  y : 0,
-  diameter : 50,
-  speedX : 5,
-  speedY : 5,
-
-  drawBall : function() {
-    ellipse(this.x, this.y, this.diameter);
-  },
-
-  moving : function() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-  },
-
-  xBounce : function() {
-    if (this.x >= (width - (this.diameter / 2)) || this.x <= (this.diameter / 2)) {
-      this.speedX *= -1;
-    }
-  },
-
-  yBounce : function() {
-    if(this.y >= (height - (this.diameter / 2)) || this.y <= (this.diameter / 2)) {
-      this.speedY *= -1;
-    }
-  },
-};
+// Variables
+// ball object defined
+var ball = [];
 
 // SETUP
 function setup() {
 
-  createCanvas(400, 400);
+  createCanvas(windowWidth, windowHeight);
   frameRate(60);
-  strokeWeight(0);
 
-  ballOne.x = random(50, 350);
-  ballOne.y = random(50, 350);
+  for(i = 0; i < 150; i++) {
+    ball[i] = {
+      diameter : 0,
+      minDiameter : 1,
+      maxDiameter : 300,
+      
+      r : 0,
+      g : 0,
+      b : 0,
+      
+      x : 0,
+      y : 0,
+  
+      speedX : 5,
+      speedY : 5,
+      speedRange : 10,
+      
+      randomise : function() {
+        this.diameter = round(random(this.minDiameter, this.maxDiameter));
 
-  ballTwo.x = random(50, 350);
-  ballTwo.y = random(50, 350);
+        this.x = round(random((this.diameter/2), width-(this.diameter/2)));
+        this.y = round(random((this.diameter/2), height-(this.diameter/2)));
 
+        this.speedX = round(random(-this.speedRange, this.speedRange));
+        this.speedY = round(random(-this.speedRange, this.speedRange));
 
+        this.r = round(random(this.diameter / 2, this.diameter));
+        this.g = round(random(this.diameter / 2, this.diameter));
+        this.b = round(random(this.diameter / 2, this.diameter));
+        
+      },
+      
+      drawBall : function() {
+        fill(this.r, this.g, this.b);
+
+        stroke(0, 0, 0);
+        strokeWeight(0);
+
+        ellipse(this.x, this.y, this.diameter);
+        
+      },
+      
+      moving : function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+      },
+      
+      xBounce : function() {
+        if (this.x >= width - (this.diameter / 2)) {
+          this.speedX *= -1;
+          
+          this.x = width - (this.diameter / 2);
+        }
+        
+        if (this.x <= this.diameter / 2) {
+          this.speedX *= -1;
+          
+          this.x = this.diameter / 2;
+        }
+      },
+      
+      yBounce : function() {
+        if (this.y >= height - (this.diameter / 2)) {
+          
+          this.speedY *= -1;
+          this.y = height - (this.diameter / 2);
+        }
+      
+        if (this.y <= this.diameter / 2) {
+          
+          this.speedY *= -1;
+          this.y = this.diameter / 2;
+        }
+      },
+    };
+    ball[i].randomise();
+  }
 }
 
 // DRAW
 function draw() {
 
   // Setting up the background
-  background(100, 150, 190);
+  background(0, 0, 0);
 
-  // ballOne
-  ballOneMove();
+  // Ball
+  for(i = 0; i < ball.length; i++) {
+    ball[i].xBounce();
+    ball[i].yBounce();
 
-  ballOne.speedX = ballOneBounce(ballOne.x, (ballOne.diameter / 2), ballOne.speedX);
-  ballOne.speedY = ballOneBounce(ballOne.y, (ballOne.diameter / 2), ballOne.speedY);
+    ball[i].moving();
 
-  ellipse(ballOne.x, ballOne.y, ballOne.diameter);
-
-  // ballTwo
-  ballTwo.moving();
-
-  ballTwo.xBounce();
-  ballTwo.yBounce();
-  
-  ballTwo.drawBall();
-}
-
-function ballOneMove() {
-  ballOne.x += ballOne.speedX;
-  ballOne.y += ballOne.speedY;
-}
-
-function ballOneBounce(position, radius, speed) {
-  if (position >= (width - radius) || position <= radius) {
-    speed *= -1;
-    }
-  return(speed);
+    ball[i].drawBall();
+  }
 }

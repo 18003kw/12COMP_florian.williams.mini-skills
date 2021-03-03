@@ -13,11 +13,11 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
 
-  for(i = 0; i < 150; i++) {
+  for(i = 0; i < 20; i++) {
     ball[i] = {
       diameter : 0,
-      minDiameter : 1,
-      maxDiameter : 300,
+      minDiameter : 10,
+      maxDiameter : 150,
       
       r : 0,
       g : 0,
@@ -39,9 +39,9 @@ function setup() {
         this.speedX = round(random(-this.speedRange, this.speedRange));
         this.speedY = round(random(-this.speedRange, this.speedRange));
 
-        this.r = round(random(this.diameter / 2, this.diameter));
-        this.g = round(random(this.diameter / 2, this.diameter));
-        this.b = round(random(this.diameter / 2, this.diameter));
+        this.r = round(random(1, 255));
+        this.g = round(random(1, 255));
+        this.b = round(random(1, 255));
         
       },
       
@@ -106,5 +106,8 @@ function draw() {
     ball[i].moving();
 
     ball[i].drawBall();
+
+
+    this.exists 
   }
 }
